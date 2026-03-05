@@ -70,7 +70,7 @@ class CartController extends Controller
                 'tariff_id' => $item->tariff_id,
                 'status' => 'Активен',
                 'ip_address' => '192.168.' . rand(1, 255) . '.' . rand(1, 255) . ':' . rand(20000, 30000), // Генерируем фейковый IP
-                'expires_at' => now()->addMonths($item->months) // Дата окончания = сегодня + кол-во месяцев
+                'expires_at' => now()->addMonths((int) $item->months) // Дата окончания = сегодня + кол-во месяцев
             ]);
         }
 

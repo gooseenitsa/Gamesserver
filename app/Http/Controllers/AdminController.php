@@ -115,7 +115,7 @@ class AdminController extends Controller
             'tariff_id' => $request->tariff_id,
             'status' => 'Активен',
             'ip_address' => '192.168.' . rand(1, 255) . '.' . rand(1, 255) . ':' . rand(20000, 30000),
-            'expires_at' => now()->addMonths($request->months)
+            'expires_at' => now()->addMonths((int) $request->months)
         ]);
 
         return back()->with('success', 'Сервер успешно выдан пользователю!');

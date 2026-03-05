@@ -51,7 +51,7 @@
                                             <td class="p-4">
                                                 <span
                                                     class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider
-                                                            {{ $server->status == 'Активен' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                                                                    {{ $server->status == 'Активен' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
                                                     {{ $server->status }}
                                                 </span>
                                             </td>
@@ -60,12 +60,32 @@
                                                 {{ \Carbon\Carbon::parse($server->expires_at)->format('d.m.Y') }}
                                             </td>
 
-                                            <td class="p-4 text-right">
-                                                <button
-                                                    onclick="alert('Управление сервером (перезагрузка, консоль) будет доступно позже!')"
-                                                    class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded shadow text-sm font-bold transition">
-                                                    Панель управления ⚙️
-                                                </button>
+                                            <td class="p-4 text-right flex justify-end gap-2">
+                                                <!-- Кнопка Включить / Выключить -->
+                                                <form action="{{ route('server.toggle', $server->id) }}" method="POST">
+                                                    @csrf
+                                                    @if($server->status == 'Активен')
+                                                        <button type="submit"
+                                                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded text-sm font-bold shadow transition">
+                                                            ⏹ Остановить
+                                                        </button>
+                                                    @else
+                                                        <button type="submit"
+                                                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm font-bold shadow transition">
+                                                            ▶ Запустить
+                                                        </button>
+                                                    @endif
+                                                </form>
+
+                                                <!-- Кнопка Удалить -->
+                                                <form action="{{ route('server.destroy', $server->id) }}" method="POST"
+                                                    onsubmit="return confirm('Вы уверены, что хотите удалить сервер навсегда?');">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-sm font-bold shadow transition">
+                                                        ✖ Удалить
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach

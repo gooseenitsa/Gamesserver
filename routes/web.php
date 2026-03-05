@@ -17,6 +17,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Управление серверами в ЛК
+    Route::post('/dashboard/server/{server}/toggle', [\App\Http\Controllers\DashboardController::class, 'toggle'])->name('server.toggle');
+    Route::post('/dashboard/server/{server}/delete', [\App\Http\Controllers\DashboardController::class, 'destroy'])->name('server.destroy');
+    // АДМИН ПАНЕЛЬ
+    Route::get('/admin', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
+    // Отзывы
+    Route::post('/game/{game}/review', [\App\Http\Controllers\ReviewController::class, 'store'])->name('review.store');
 
     Route::get('/cart', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{tariff}', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');

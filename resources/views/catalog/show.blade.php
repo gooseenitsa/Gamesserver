@@ -76,6 +76,62 @@
                 </div>
             @endforeach
         </div>
+        <!-- БЛОК ОТЗЫВОВ -->
+        <div class="max-w-7xl mx-auto py-10 px-4 border-t border-gray-300 mt-10">
+            <h2 class="text-3xl font-bold mb-8">Отзывы игроков</h2>
+
+            <!-- Форма добавления отзыва (Только для авторизованных) -->
+            @auth
+                <form action="{{ route('review.store', $game->id) }}" method="POST"
+                    class="bg-white p-6 rounded-lg shadow-md mb-10 border border-gray-200">
+                    @csrf
+                    <h3 class="text-xl font-bold mb-4">Оставить свой отзыв</h3>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2">Оценка:</label>
+                        <select name="rating" class="border-gray-300 rounded shadow-sm">
+                            <option value="5">⭐⭐⭐⭐⭐ (Отлично)</option>
+                            <option value="4">⭐⭐⭐⭐ (Хорошо)</option>
+                            <option value="3">⭐⭐⭐ (Нормально)</option>
+                            <option value="2">⭐⭐ (Плохо)</option>
+                            <option value="1">⭐ (Ужасно)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <textarea name="text" rows="3" required
+                            placeholder="Напишите, как вам пинг, аптайм и качество сервера..."
+                            class="w-full border-gray-300 rounded shadow-sm focus:border-blue-500"></textarea>
+                    </div>
+
+                    <button type="submit"
+                        class="bg-blue-600 text-white font-bold py-2 px-6 rounded hover:bg-blue-700">Отправить
+                        отзыв</button>
+                </form>
+            @else
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-10">
+                    <p class="text-blue-700">Только авторизованные пользователи могут оставлять отзывы. <a
+                            href="{{ route('login') }}" class="font-bold underline">Войдите</a>, чтобы поделиться мнением.
+                    </p>
+                </div>
+            @endauth
+
+            <!-- Список отзывов -->
+            <div class="space-y-6">
+                @forelse($reviews as $review)
+                    <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="font-bold text-lg text-gray-900">{{ $review->user->name }}</div>
+                            <div class="text-sm text-gray-500">{{ $review->created_at->format('d.m.Y H:i') }}</div>
+                        </div>
+                        <div class="text-yellow-500 mb-2 font-bold">Оценка: {{ $review->rating }} / 5</div>
+                        <p class="text-gray-700">{{ $review->text }}</p>
+                    </div>
+                @empty
+                    <p class="text-gray-500 italic">Пока нет ни одного отзыва. Будьте первым!</p>
+                @endforelse
+            </div>
+        </div>
     </div>
 
 </body>

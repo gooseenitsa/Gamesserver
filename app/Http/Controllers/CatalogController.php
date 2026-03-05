@@ -26,15 +26,17 @@ class CatalogController extends Controller
     {
         $tariffsQuery = $game->tariffs();
 
-        // Логика сортировки
         if ($request->sort == 'price_desc') {
-            $tariffsQuery->orderBy('price', 'desc'); // Сначала дорогие
+            $tariffsQuery->orderBy('price', 'desc');
         } else {
-            $tariffsQuery->orderBy('price', 'asc'); // По умолчанию: сначала дешевые
+            $tariffsQuery->orderBy('price', 'asc');
         }
 
         $tariffs = $tariffsQuery->get();
 
-        return view('catalog.show', compact('game', 'tariffs'));
+        // ДОСТАЕМ ОТЗЫВЫ ВМЕСТЕ С ИМЕНАМИ ПОЛЬЗОВАТЕЛЕЙ (Свежие сверху)
+        $reviews = $game->reviews()->with('user')->orderBy('created_at', 'desc')->get();
+
+        return view('catalog.show', compact('game', 'tariffs', 'reviews'));
     }
 }

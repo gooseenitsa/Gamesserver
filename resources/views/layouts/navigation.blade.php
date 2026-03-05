@@ -17,7 +17,12 @@
                     </x-nav-link>
                     <x-nav-link :href="route('home')">
                         {{ __('Каталог серверов') }}
-                    </x-nav-link>
+                    </x-nav-link>@if(auth()->user()->is_admin)
+                        <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.index')"
+                            class="text-red-600 font-bold">
+                            {{ __('Админ-панель') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 

@@ -19,4 +19,24 @@ class DashboardController extends Controller
         // Отдаем их в шаблон dashboard
         return view('dashboard', compact('servers'));
     }
+    // Включение / Выключение сервера
+    public function toggle(Server $server)
+    {
+        // Проверяем, что сервер принадлежит именно этому юзеру
+        if ($server->user_id == auth()->id()) {
+            // Меняем статус на противоположный
+            $server->status = ($server->status == 'Активен') ? 'Остановлен' : 'Активен';
+            $server->save();
+        }
+        return back()->with('success', 'Статус сервера изменен!');
+    }
+
+    // Удаление сервера
+    public function destroy(Server $server)
+    {
+        if ($server->user_id == auth()->id()) {
+            $server->delete();
+        }
+        return back()->with('success', 'Сервер удален из вашего аккаунта.');
+    }
 }

@@ -92,7 +92,14 @@
                     @forelse($reviews as $review)
                         <div class="p-4 border border-gray-100 rounded-lg">
                             <div class="flex justify-between mb-2">
-                                <span class="font-bold text-gray-900">{{ $review->user->name }}</span>
+                                <div>
+                                    <span class="font-bold text-gray-900">{{ $review->user->name }}</span>
+                                    @if($review->tariff)
+                                        <span class="ml-2 text-xs font-semibold bg-indigo-100 text-indigo-800 px-2 py-1 rounded">
+                                            Тариф: {{ $review->tariff->name }} ({{ $review->tariff->slots }} слотов)
+                                        </span>
+                                    @endif
+                                </div>
                                 <span class="text-sm text-gray-500">{{ $review->created_at->format('d.m.Y') }}</span>
                             </div>
                             <div class="text-yellow-500 text-sm mb-2">Оценка: {{ $review->rating }} / 5</div>

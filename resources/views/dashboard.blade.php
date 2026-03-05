@@ -7,6 +7,13 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            
+            @if(session('success'))
+                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
 
@@ -29,8 +36,8 @@
                                         <th class="p-4 rounded-tr-lg border-b-2 text-right">Управление</th>
                                     </tr>
                                 </thead>
-                                <tbody>
                                     @foreach($servers as $server)
+                                        <tbody x-data="{ openReview: false }">
                                         <tr class="border-b hover:bg-gray-50 transition">
                                             <td class="p-4">
                                                 <div class="font-bold text-lg flex items-center gap-3">
@@ -61,6 +68,12 @@
                                             </td>
 
                                             <td class="p-4 text-right flex justify-end gap-2">
+                                                <!-- Кнопка Отзыв (Alpine.js) -->
+                                                <button @click="openReview = !openReview" type="button"
+                                                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm font-bold shadow transition">
+                                                    📝 Отзыв
+                                                </button>
+
                                                 <!-- Кнопка Включить / Выключить -->
                                                 <form action="{{ route('server.toggle', $server->id) }}" method="POST">
                                                     @csrf
@@ -88,8 +101,32 @@
                                                 </form>
                                             </td>
                                         </tr>
+                                        
+                                        <!-- Форма отзыва (скрыта по умолчанию) -->
+                                        <tr x-show="openReview" x-cloak class="bg-indigo-50 border-b">
+                                            <td colspan="5" class="p-4">
+                                                <form action="{{ route('server.review.store', $server->id) }}" method="POST" class="max-w-3xl bg-white p-4 rounded shadow border border-indigo-100">
+                                                    @csrf
+                                                    <h4 class="font-bold text-indigo-800 mb-2">Оставить отзыв о сервере: {{ $server->tariff->game->title }} ({{ $server->tariff->name }})</h4>
+                                                    <textarea name="text" rows="2" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm mb-3" placeholder="Напишите, как вам этот сервер..." required></textarea>
+                                                    <div class="flex items-center gap-4">
+                                                        <label class="text-sm font-medium text-gray-700">Оценка:</label>
+                                                        <select name="rating" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                                            <option value="5">⭐⭐⭐⭐⭐ (5) Отлично</option>
+                                                            <option value="4">⭐⭐⭐⭐ (4) Хорошо</option>
+                                                            <option value="3">⭐⭐⭐ (3) Нормально</option>
+                                                            <option value="2">⭐⭐ (2) Плохо</option>
+                                                            <option value="1">⭐ (1) Ужасно</option>
+                                                        </select>
+                                                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-indigo-700 shadow transition">
+                                                            Отправить отзыв
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
                                     @endforeach
-                                </tbody>
                             </table>
                         </div>
                     @endif

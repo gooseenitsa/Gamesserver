@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/server', [\App\Http\Controllers\AdminController::class, 'storeServer'])->name('admin.server.store');
 
     Route::post('/game/{game}/review', [\App\Http\Controllers\ReviewController::class, 'store'])->name('review.store');
+    Route::post('/server/{server}/review', [\App\Http\Controllers\ReviewController::class, 'storeForServer'])->name('server.review.store');
 
     Route::get('/cart', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{tariff}', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');

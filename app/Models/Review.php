@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
-    protected $fillable = ['user_id', 'game_id', 'text', 'rating'];
+    protected $fillable = ['user_id', 'game_id', 'tariff_id', 'text', 'rating'];
 
     public function user()
     {
@@ -13,5 +13,9 @@ class Review extends Model
     public function game()
     {
         return $this->belongsTo(Game::class);
+    }
+    public function tariff()
+    {
+        return $this->belongsTo(Tariff::class);
     }
 }

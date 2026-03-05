@@ -34,8 +34,8 @@ class CatalogController extends Controller
 
         $tariffs = $tariffsQuery->get();
 
-        // ДОСТАЕМ ОТЗЫВЫ ВМЕСТЕ С ИМЕНАМИ ПОЛЬЗОВАТЕЛЕЙ (Свежие сверху)
-        $reviews = $game->reviews()->with('user')->orderBy('created_at', 'desc')->get();
+        // ДОСТАЕМ ОТЗЫВЫ ВМЕСТЕ С ИМЕНАМИ ПОЛЬЗОВАТЕЛЕЙ И ТАРИФАМИ (Свежие сверху)
+        $reviews = $game->reviews()->with(['user', 'tariff'])->orderBy('created_at', 'desc')->get();
 
         return view('catalog.show', compact('game', 'tariffs', 'reviews'));
     }

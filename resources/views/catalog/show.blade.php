@@ -1,139 +1,109 @@
-<!DOCTYPE html>
-<html lang="ru">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $game->title }} - Тарифы</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-
-<body class="bg-gray-100">
-
-    <!-- Шапка (Такая же, чтобы не ломать дизайн) -->
-    <nav class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-lg">
-        <a href="{{ route('home') }}" class="text-2xl font-bold uppercase tracking-widest text-blue-400">GameHost</a>
-        <div>
-            <a href="{{ route('home') }}" class="mr-6 hover:text-gray-300">← Назад в каталог</a>
-            @auth
-                <a href="{{ route('dashboard') }}" class="hover:text-gray-300">Личный кабинет</a>
-            @else
-                <a href="{{ route('login') }}" class="mr-4 hover:text-gray-300">Вход</a>
-                <a href="{{ route('register') }}" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-500">Регистрация</a>
-            @endauth
+<x-app-layout>
+    <x-slot name="header">
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ $game->title }}
+            </h2>
+            <a href="{{ route('home') }}" class="text-indigo-600 hover:text-indigo-900 font-bold text-sm">← Назад в
+                каталог</a>
         </div>
-    </nav>
+    </x-slot>
 
-    <!-- Информация об игре -->
-    <div class="bg-gray-800 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 flex items-center gap-8">
-            <img src="{{ $game->image_url }}"
-                class="w-48 h-48 object-cover rounded-lg shadow-2xl border-4 border-gray-700">
-            <div>
-                <h1 class="text-5xl font-extrabold mb-4">{{ $game->title }}</h1>
-                <p class="text-xl text-gray-300 max-w-2xl">{{ $game->description }}</p>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+
+            <!-- Инфо об игре -->
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 flex gap-8 items-center">
+                <img src="{{ $game->image_url }}" class="w-48 h-48 object-cover rounded-lg shadow-md">
+                <div>
+                    <h1 class="text-4xl font-extrabold text-gray-900 mb-4">{{ $game->title }}</h1>
+                    <p class="text-lg text-gray-600">{{ $game->description }}</p>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <div class="max-w-7xl mx-auto py-10 px-4">
-        <div class="flex justify-between items-end mb-8">
-            <h2 class="text-3xl font-bold">Выберите тарифный план</h2>
-
-            <!-- ФОРМА СОРТИРОВКИ -->
-            <form action="{{ route('game.show', $game->id) }}" method="GET" class="flex items-center gap-2">
-                <label class="text-gray-600 font-medium">Сортировка:</label>
-                <select name="sort" onchange="this.form.submit()"
-                    class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Сначала дешевые
-                    </option>
-                    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Сначала дорогие
-                    </option>
-                </select>
-            </form>
-        </div>
-
-        <!-- СЕТКА ТАРИФОВ -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            @foreach($tariffs as $tariff)
-                <div
-                    class="bg-white border-2 border-transparent hover:border-blue-500 rounded-xl p-6 flex flex-col text-center shadow-lg transition">
-                    <h3 class="text-2xl font-bold mb-2">{{ $tariff->name }}</h3>
-                    <div class="text-gray-600 mb-6 space-y-2">
-                        <p>🎮 Слотов: <span class="font-bold text-gray-900">{{ $tariff->slots }}</span></p>
-                        <p>💾 ОЗУ: <span class="font-bold text-gray-900">{{ $tariff->ram_mb }} MB</span></p>
-                    </div>
-                    <div class="text-4xl font-extrabold text-blue-600 mb-6">{{ $tariff->price }} ₽<span
-                            class="text-base text-gray-500 font-normal">/мес</span></div>
-
-                    <form action="{{ route('cart.add', $tariff->id) }}" method="POST" class="mt-auto">
-                        @csrf
-                        <button type="submit"
-                            class="w-full bg-green-500 text-white font-bold py-3 rounded hover:bg-green-600 transition shadow-md">
-                            В корзину
-                        </button>
+            <!-- Тарифы и сортировка -->
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Тарифные планы</h2>
+                    <form action="{{ route('game.show', $game->id) }}" method="GET">
+                        <select name="sort" onchange="this.form.submit()" class="border-gray-300 rounded-md text-sm">
+                            <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Сначала
+                                дешевые</option>
+                            <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Сначала
+                                дорогие</option>
+                        </select>
                     </form>
                 </div>
-            @endforeach
-        </div>
-        <!-- БЛОК ОТЗЫВОВ -->
-        <div class="max-w-7xl mx-auto py-10 px-4 border-t border-gray-300 mt-10">
-            <h2 class="text-3xl font-bold mb-8">Отзывы игроков</h2>
 
-            <!-- Форма добавления отзыва (Только для авторизованных) -->
-            @auth
-                <form action="{{ route('review.store', $game->id) }}" method="POST"
-                    class="bg-white p-6 rounded-lg shadow-md mb-10 border border-gray-200">
-                    @csrf
-                    <h3 class="text-xl font-bold mb-4">Оставить свой отзыв</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    @foreach($tariffs as $tariff)
+                        <div
+                            class="border rounded-xl p-6 text-center hover:border-indigo-500 hover:shadow-lg transition flex flex-col">
+                            <h3 class="text-xl font-extrabold text-gray-900 mb-2">{{ $tariff->name }}</h3>
+                            <p class="text-gray-500 mb-4">{{ $tariff->slots }} слотов | {{ $tariff->ram_mb }} MB RAM</p>
+                            <div class="text-3xl font-black text-indigo-600 mb-6">{{ $tariff->price }} ₽<span
+                                    class="text-sm font-normal text-gray-500">/мес</span></div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-bold mb-2">Оценка:</label>
-                        <select name="rating" class="border-gray-300 rounded shadow-sm">
-                            <option value="5">⭐⭐⭐⭐⭐ (Отлично)</option>
-                            <option value="4">⭐⭐⭐⭐ (Хорошо)</option>
-                            <option value="3">⭐⭐⭐ (Нормально)</option>
-                            <option value="2">⭐⭐ (Плохо)</option>
-                            <option value="1">⭐ (Ужасно)</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <textarea name="text" rows="3" required
-                            placeholder="Напишите, как вам пинг, аптайм и качество сервера..."
-                            class="w-full border-gray-300 rounded shadow-sm focus:border-blue-500"></textarea>
-                    </div>
-
-                    <button type="submit"
-                        class="bg-blue-600 text-white font-bold py-2 px-6 rounded hover:bg-blue-700">Отправить
-                        отзыв</button>
-                </form>
-            @else
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-10">
-                    <p class="text-blue-700">Только авторизованные пользователи могут оставлять отзывы. <a
-                            href="{{ route('login') }}" class="font-bold underline">Войдите</a>, чтобы поделиться мнением.
-                    </p>
-                </div>
-            @endauth
-
-            <!-- Список отзывов -->
-            <div class="space-y-6">
-                @forelse($reviews as $review)
-                    <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="font-bold text-lg text-gray-900">{{ $review->user->name }}</div>
-                            <div class="text-sm text-gray-500">{{ $review->created_at->format('d.m.Y H:i') }}</div>
+                            @auth
+                                <form action="{{ route('cart.add', $tariff->id) }}" method="POST" class="mt-auto">
+                                    @csrf
+                                    <button type="submit"
+                                        class="w-full bg-green-500 text-white font-bold py-3 rounded hover:bg-green-600 transition">В
+                                        корзину</button>
+                                </form>
+                            @else
+                                <a href="{{ route('login') }}"
+                                    class="block mt-auto w-full bg-gray-200 text-gray-700 font-bold py-3 rounded hover:bg-gray-300 transition">Войдите
+                                    для покупки</a>
+                            @endauth
                         </div>
-                        <div class="text-yellow-500 mb-2 font-bold">Оценка: {{ $review->rating }} / 5</div>
-                        <p class="text-gray-700">{{ $review->text }}</p>
-                    </div>
-                @empty
-                    <p class="text-gray-500 italic">Пока нет ни одного отзыва. Будьте первым!</p>
-                @endforelse
+                    @endforeach
+                </div>
             </div>
+
+            <!-- Отзывы -->
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Отзывы игроков</h2>
+
+                @auth
+                    <form action="{{ route('review.store', $game->id) }}" method="POST"
+                        class="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                        @csrf
+                        <div class="mb-4 flex gap-4 items-center">
+                            <label class="font-bold text-gray-700">Ваша оценка:</label>
+                            <select name="rating" class="border-gray-300 rounded-md">
+                                <option value="5">⭐⭐⭐⭐⭐ 5/5</option>
+                                <option value="4">⭐⭐⭐⭐ 4/5</option>
+                                <option value="3">⭐⭐⭐ 3/5</option>
+                                <option value="2">⭐⭐ 2/5</option>
+                                <option value="1">⭐ 1/5</option>
+                            </select>
+                        </div>
+                        <textarea name="text" required placeholder="Поделитесь впечатлениями о сервере..."
+                            class="w-full border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 mb-4"
+                            rows="3"></textarea>
+                        <button type="submit"
+                            class="bg-indigo-600 text-white px-6 py-2 rounded-md font-bold hover:bg-indigo-700">Оставить
+                            отзыв</button>
+                    </form>
+                @endauth
+
+                <div class="space-y-4">
+                    @forelse($reviews as $review)
+                        <div class="p-4 border border-gray-100 rounded-lg">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-bold text-gray-900">{{ $review->user->name }}</span>
+                                <span class="text-sm text-gray-500">{{ $review->created_at->format('d.m.Y') }}</span>
+                            </div>
+                            <div class="text-yellow-500 text-sm mb-2">Оценка: {{ $review->rating }} / 5</div>
+                            <p class="text-gray-700">{{ $review->text }}</p>
+                        </div>
+                    @empty
+                        <p class="text-gray-500">Пока нет отзывов.</p>
+                    @endforelse
+                </div>
+            </div>
+
         </div>
     </div>
-
-</body>
-
-</html>
+</x-app-layout>

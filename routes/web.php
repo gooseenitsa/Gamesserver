@@ -20,9 +20,16 @@ Route::middleware('auth')->group(function () {
     // Управление серверами в ЛК
     Route::post('/dashboard/server/{server}/toggle', [\App\Http\Controllers\DashboardController::class, 'toggle'])->name('server.toggle');
     Route::post('/dashboard/server/{server}/delete', [\App\Http\Controllers\DashboardController::class, 'destroy'])->name('server.destroy');
-    // АДМИН ПАНЕЛЬ
+    // --- АДМИН ПАНЕЛЬ ---
     Route::get('/admin', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
-    // Отзывы
+    Route::post('/admin/server/{server}/toggle', [\App\Http\Controllers\AdminController::class, 'toggle'])->name('admin.server.toggle');
+    Route::post('/admin/server/{server}/delete', [\App\Http\Controllers\AdminController::class, 'destroy'])->name('admin.server.destroy');
+
+    // Добавление игр, тарифов и серверов из админки
+    Route::post('/admin/game', [\App\Http\Controllers\AdminController::class, 'storeGame'])->name('admin.game.store');
+    Route::post('/admin/tariff', [\App\Http\Controllers\AdminController::class, 'storeTariff'])->name('admin.tariff.store');
+    Route::post('/admin/server', [\App\Http\Controllers\AdminController::class, 'storeServer'])->name('admin.server.store');
+
     Route::post('/game/{game}/review', [\App\Http\Controllers\ReviewController::class, 'store'])->name('review.store');
 
     Route::get('/cart', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');

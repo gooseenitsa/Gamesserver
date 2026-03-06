@@ -16,12 +16,36 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
             @if($cartItems->isEmpty())
-                <div class="bg-gray-800 p-16 rounded-2xl shadow-xl text-center border border-gray-700">
-                    <svg class="w-24 h-24 text-gray-600 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                    <h2 class="text-3xl font-black text-gray-300 mb-6 tracking-tight">Ваша корзина пуста</h2>
-                    <a href="{{ route('home') }}" class="inline-block bg-indigo-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-indigo-500 shadow-lg shadow-indigo-500/30 transition-all text-lg">
-                        Выбрать мощный сервер
-                    </a>
+                <div class="relative bg-gray-800/80 rounded-3xl overflow-hidden border border-gray-700/80 shadow-2xl">
+                    <!-- Декоративный градиент -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-green-500/5 pointer-events-none"></div>
+                    <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+                    
+                    <div class="relative flex flex-col lg:flex-row items-center gap-12 lg:gap-16 p-12 lg:p-16">
+                        <!-- Левая часть: иконка + текст -->
+                        <div class="flex flex-col items-center lg:items-start text-center lg:text-left flex-1">
+                            <div class="relative mb-8">
+                                <div class="w-28 h-28 rounded-2xl bg-gray-900/80 border border-gray-600 flex items-center justify-center rotate-3 hover:rotate-0 transition-transform duration-300">
+                                    <svg class="w-14 h-14 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                                </div>
+                                <span class="absolute -bottom-2 -right-2 text-4xl opacity-20">?</span>
+                            </div>
+                            <h2 class="text-3xl lg:text-4xl font-black text-white mb-3 tracking-tight">Корзина пока пуста</h2>
+                            <p class="text-gray-400 text-lg max-w-md">Добавьте тариф из каталога — и через пару кликов ваш игровой сервер уже будет запущен.</p>
+                        </div>
+                        
+                        <!-- Разделитель на десктопе -->
+                        <div class="hidden lg:block w-px h-40 bg-gradient-to-b from-transparent via-gray-600 to-transparent self-center"></div>
+                        
+                        <!-- Правая часть: CTA -->
+                        <div class="flex flex-col items-center lg:items-end gap-6 flex-shrink-0">
+                            <a href="{{ route('home') }}" class="group inline-flex items-center gap-3 bg-indigo-600 hover:bg-indigo-500 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-500/25 transition-all hover:shadow-indigo-500/40 hover:scale-[1.02]">
+                                <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Перейти в каталог серверов
+                            </a>
+                            <p class="text-gray-500 text-sm">Minecraft, CS2, Rust, ARK и другие</p>
+                        </div>
+                    </div>
                 </div>
             @else
                 <div class="bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-700">
